@@ -1,0 +1,8 @@
+{
+  "server": {
+    "externalUrl": "http://localhost",
+    "graphql": {
+      "playground": true
+    }
+  }
+}

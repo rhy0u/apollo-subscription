@@ -1,0 +1,8 @@
+{
+  "server": {
+    "secure": true,
+    "assets": {
+      "webpackAssets": true
+    }
+  }
+}

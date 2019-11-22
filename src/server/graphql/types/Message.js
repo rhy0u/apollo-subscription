@@ -16,25 +16,32 @@ export const schema = /* GraphQL */ `
     text: String!
   }
   extend type Query {
-    messages: [Message!]!
+    messages(limit: Int): [Message!]!
     message(messageId: ID!): Message!
   }
   extend type Mutation {
     addMessage(message: MessageInput!): Message!
   }
   extend type Subscription {
-    addedMessage: Message
+    addedMessage: Message!
   }
 `
 export const resolvers = {
   Query: {
-    messages: async () => Message.query(),
+    messages: async (object, { limit }) =>
+      (
+        await Message.query()
+          .orderBy('createdAt', 'DESC')
+          .modify(builder => {
+            if (limit) builder.limit(limit)
+          })
+      ).reverse(),
     message: async (object, { messageId }) =>
       Message.query().findById(messageId),
   },
   Mutation: {
     addMessage: async (object, { message }) => {
-      const addedMessage = await Message.query().insertAndFetch(message)
+      const addedMessage = await Message.query().insert(message)
       pubsub.publish('pinAdded', { addedMessage })
 
       return addedMessage

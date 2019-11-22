@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Form } from 'react-final-form'
 import styled from 'styled-components'
@@ -11,6 +11,16 @@ import { required } from 'client/utils/validators'
 const ADD_MESSAGE = gql`
   mutation AddMessage($message: MessageInput!) {
     addMessage(message: $message) {
+      id
+      author
+      text
+    }
+  }
+`
+
+const GET_MESSAGES = gql`
+  query GetMessages {
+    messages(limit: 5) {
       id
       author
       text
@@ -30,11 +40,12 @@ const PageWrapper = styled.div`
 `
 
 const App = () => {
+  const { data, loading } = useQuery(GET_MESSAGES)
   const [addMessage] = useMutation(ADD_MESSAGE)
 
   return (
     <PageWrapper>
-      <MessageList />
+      {!loading && <MessageList lastMessages={data.messages} />}
       <Form
         onSubmit={async values => {
           await addMessage({
@@ -60,7 +71,7 @@ const App = () => {
                 type="submit"
                 disabled={hasValidationErrors}
               >
-                submit
+                Envoyer le message
               </Button>
             </NewMessage>
           </form>

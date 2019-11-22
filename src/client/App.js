@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { Button } from '@material-ui/core'
 import TextField from 'client/components/TextField'
 import MessageList from 'client/components/MessageList'
+import { required } from 'client/utils/validators'
 
 const ADD_MESSAGE = gql`
   mutation AddMessage($message: MessageInput!) {
@@ -43,12 +44,22 @@ const App = () => {
           })
         }}
       >
-        {({ handleSubmit }) => (
+        {({ handleSubmit, hasValidationErrors }) => (
           <form onSubmit={handleSubmit}>
             <NewMessage>
-              <TextField name="author" label="Nom" />
-              <TextField name="text" label="Message" multiline rows={4} />
-              <Button variant="contained" type="submit">
+              <TextField name="author" label="Nom" validate={required} />
+              <TextField
+                name="text"
+                label="Message"
+                multiline
+                rows={4}
+                validate={required}
+              />
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={hasValidationErrors}
+              >
                 submit
               </Button>
             </NewMessage>

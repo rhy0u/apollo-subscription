@@ -5,9 +5,11 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { WebSocketLink } from 'apollo-link-ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-const GRAPHQL_ENDPOINT = 'ws://localhost:8000/graphql'
+const loc = window.location
 
-const client = new SubscriptionClient(GRAPHQL_ENDPOINT, {
+const uri = `${loc.protocol === 'https:' ? 'wss:' : 'ws:'}//${loc.host}/graphql`
+
+const client = new SubscriptionClient(uri, {
   reconnect: true,
 })
 

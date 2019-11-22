@@ -57,7 +57,12 @@ export default {
           hot: true,
           contentBase: DIST_PATH,
           publicPath: '/dist/',
-          proxy: { '*': { target: 'http://localhost:8000' } },
+          proxy: {
+            '*': {
+              target: 'http://localhost:8000',
+              ws: true,
+            },
+          },
         },
       }
     : {}),

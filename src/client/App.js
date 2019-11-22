@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { useSubscription, useMutation } from '@apollo/react-hooks'
+import React from 'react'
+import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { Form, Field } from 'react-final-form'
+import { Form } from 'react-final-form'
 import styled from 'styled-components'
-
-const ADDED_MESSAGE = gql`
-  subscription addedMessage {
-    addedMessage {
-      id
-      author
-      text
-    }
-  }
-`
+import { Button } from '@material-ui/core'
+import TextField from 'client/components/TextField'
+import MessageList from 'client/components/MessageList'
 
 const ADD_MESSAGE = gql`
   mutation AddMessage($message: MessageInput!) {
@@ -24,43 +17,23 @@ const ADD_MESSAGE = gql`
   }
 `
 
-const MessagesList = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 300px;
-  overflow: scroll;
-`
 const NewMessage = styled.div`
   display: flex;
   flex-direction: column;
 `
-
-const Message = styled.div`
-  border: 1px solid black;
-  border-radius: 5px;
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 20px);
+  padding: 8px;
 `
 
 const App = () => {
-  const { data } = useSubscription(ADDED_MESSAGE)
-
   const [addMessage] = useMutation(ADD_MESSAGE)
 
-  const [messages, setMessages] = useState([])
-
-  useEffect(() => {
-    if (data && data.addedMessage)
-      setMessages(prevMessages => [...prevMessages, data.addedMessage])
-  }, [data])
   return (
-    <div>
-      <MessagesList>
-        {messages.map(message => (
-          <Message key={message.id}>
-            <span>{message.author}</span>
-            <p>{message.text}</p>
-          </Message>
-        ))}
-      </MessagesList>
+    <PageWrapper>
+      <MessageList />
       <Form
         onSubmit={async values => {
           await addMessage({
@@ -73,14 +46,16 @@ const App = () => {
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <NewMessage>
-              <Field name="author" component="input" />
-              <Field name="text" component="textarea" />
-              <button type="submit">submit</button>
+              <TextField name="author" label="Nom" />
+              <TextField name="text" label="Message" multiline rows={4} />
+              <Button variant="contained" type="submit">
+                submit
+              </Button>
             </NewMessage>
           </form>
         )}
       </Form>
-    </div>
+    </PageWrapper>
   )
 }
 

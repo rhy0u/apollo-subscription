@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useSubscription } from '@apollo/react-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import gql from 'graphql-tag'
 
 const ADDED_MESSAGE = gql`
-  subscription AddedMessage {
+  subscription addedMessage {
     addedMessage {
-      id
-      author
-      text
-    }
-  }
-`
-
-const LAST_MESSAGES = gql`
-  query LastMessages {
-    lastMessages(limit: 2) {
       id
       author
       text
@@ -31,20 +21,14 @@ const useStyles = makeStyles({
 })
 
 const MessageList = () => {
-  const { data: addedMessage } = useSubscription(ADDED_MESSAGE)
-  const { data: lastMessages } = useQuery(LAST_MESSAGES)
+  const { data } = useSubscription(ADDED_MESSAGE)
   const classes = useStyles()
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    if (lastMessages && lastMessages.lastMessages)
-      setMessages(lastMessages.lastMessages)
-  }, [lastMessages])
-
-  useEffect(() => {
-    if (addedMessage && addedMessage.addedMessage)
-      setMessages(prevMessages => [...prevMessages, addedMessage.addedMessage])
-  }, [addedMessage])
+    if (data && data.addedMessage)
+      setMessages(prevMessages => [...prevMessages, data.addedMessage])
+  }, [data])
 
   return (
     <List className={classes.list}>

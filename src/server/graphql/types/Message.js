@@ -16,7 +16,6 @@ export const schema = /* GraphQL */ `
     text: String!
   }
   extend type Query {
-    lastMessages(limit: Int!): [Message!]!
     messages: [Message!]!
     message(messageId: ID!): Message!
   }
@@ -30,12 +29,6 @@ export const schema = /* GraphQL */ `
 export const resolvers = {
   Query: {
     messages: async () => Message.query(),
-    lastMessages: async (object, { limit }) => {
-      const messages = await Message.query()
-        .orderBy('createdAt', 'DESC')
-        .limit(limit)
-      return messages
-    },
     message: async (object, { messageId }) =>
       Message.query().findById(messageId),
   },

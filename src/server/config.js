@@ -40,7 +40,7 @@ const config = convict({
       default: DEFAULT_PUBLIC_PATH,
     },
     externalUrl: {
-      default: 'http://localhost',
+      default: 'http://localhost:8000',
     },
     graphql: {
       playground: {

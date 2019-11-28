@@ -37,13 +37,6 @@ export default {
   resolve: {
     extensions: ['.js', '.json'],
     modules: ['node_modules', 'src'],
-    alias: {
-      '@material-ui/styles': path.resolve(
-        __dirname,
-        'node_modules',
-        '@material-ui/styles',
-      ),
-    },
   },
   plugins: [
     ...(development

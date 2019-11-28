@@ -19,6 +19,6 @@ apolloServer.installSubscriptionHandlers(httpServer)
 httpServer.listen(config.get('server.port'), () => {
   /* eslint-disable no-console */
   connectDatabase()
-  console.log(`🔥 server is listening on port ${config.get('server.port')}
-  ${config.get('server.externalUrl')}:${config.get('server.port')}`)
+  console.log(`🔥 server is listening on ${config.get('server.externalUrl')}
+  `)
 })
